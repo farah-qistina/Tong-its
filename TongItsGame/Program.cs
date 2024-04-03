@@ -1,16 +1,23 @@
-namespace TongItsGame;
+using System;
+using System.Windows.Forms;
+using TongItsGame.Forms;
 
-static class Program
+namespace TongItsGame
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
-    [STAThread]
-    static void Main()
+    static class Program
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
-        ApplicationConfiguration.Initialize();
-        Application.Run(new Form1());
-    }    
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            // Enable visual styles for the application.
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            // Create the main form and run the application.
+            Application.Run(new StartForm());
+        }
+    }
 }

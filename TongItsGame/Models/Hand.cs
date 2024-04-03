@@ -33,5 +33,15 @@ public class Hand
         throw new ArgumentOutOfRangeException(nameof(index), "Index out of range");
     }
 
+    public List<Card> GetAllCards()
+    {
+        return new List<Card>(cards); // Returns a new list containing all cards in the hand
+    }
+
+    public bool ContainsCard(Card card)
+    {
+        return cards.Contains(card);
+    }
+
     // Other hand-related methods like evaluating the hand can be added here
 }

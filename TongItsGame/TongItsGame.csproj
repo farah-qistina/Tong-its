@@ -8,4 +8,218 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Forms\Images\AceClubs.jpg" />
+    <None Remove="Forms\Images\AceDiamonds.jpg" />
+    <None Remove="Forms\Images\AceHearts.jpg" />
+    <None Remove="Forms\Images\AceSpades.jpg" />
+    <None Remove="Forms\Images\EightClubs.jpg" />
+    <None Remove="Forms\Images\EightDiamonds.jpg" />
+    <None Remove="Forms\Images\EightHearts.jpg" />
+    <None Remove="Forms\Images\EightSpades.jpg" />
+    <None Remove="Forms\Images\FiveClubs.jpg" />
+    <None Remove="Forms\Images\FiveDiamonds.jpg" />
+    <None Remove="Forms\Images\FiveHearts.jpg" />
+    <None Remove="Forms\Images\FiveSpades.jpg" />
+    <None Remove="Forms\Images\FourClubs.jpg" />
+    <None Remove="Forms\Images\FourDiamonds.jpg" />
+    <None Remove="Forms\Images\FourHearts.jpg" />
+    <None Remove="Forms\Images\FourSpades.jpg" />
+    <None Remove="Forms\Images\JackClubs.jpg" />
+    <None Remove="Forms\Images\JackDiamonds.jpg" />
+    <None Remove="Forms\Images\JackHearts.jpg" />
+    <None Remove="Forms\Images\JackSpades.jpg" />
+    <None Remove="Forms\Images\KingClubs.jpg" />
+    <None Remove="Forms\Images\KingDiamonds.jpg" />
+    <None Remove="Forms\Images\KingHearts.jpg" />
+    <None Remove="Forms\Images\KingSpades.jpg" />
+    <None Remove="Forms\Images\NineClubs.jpg" />
+    <None Remove="Forms\Images\NineDiamonds.jpg" />
+    <None Remove="Forms\Images\NineHearts.jpg" />
+    <None Remove="Forms\Images\NineSpades.jpg" />
+    <None Remove="Forms\Images\QueenClubs.jpg" />
+    <None Remove="Forms\Images\QueenDiamonds.jpg" />
+    <None Remove="Forms\Images\QueenHearts.jpg" />
+    <None Remove="Forms\Images\QueenSpades.jpg" />
+    <None Remove="Forms\Images\SevenClubs.jpg" />
+    <None Remove="Forms\Images\SevenDiamonds.jpg" />
+    <None Remove="Forms\Images\SevenHearts.jpg" />
+    <None Remove="Forms\Images\SevenSpades.jpg" />
+    <None Remove="Forms\Images\SixClubs.jpg" />
+    <None Remove="Forms\Images\SixDiamonds.jpg" />
+    <None Remove="Forms\Images\SixHearts.jpg" />
+    <None Remove="Forms\Images\SixSpades.jpg" />
+    <None Remove="Forms\Images\TenClubs.jpg" />
+    <None Remove="Forms\Images\TenDiamonds.jpg" />
+    <None Remove="Forms\Images\TenHearts.jpg" />
+    <None Remove="Forms\Images\TenSpades.jpg" />
+    <None Remove="Forms\Images\ThreeClubs.jpg" />
+    <None Remove="Forms\Images\ThreeDiamonds.jpg" />
+    <None Remove="Forms\Images\ThreeHearts.jpg" />
+    <None Remove="Forms\Images\ThreeSpades.jpg" />
+    <None Remove="Forms\Images\TwoClubs.jpg" />
+    <None Remove="Forms\Images\TwoDiamonds.jpg" />
+    <None Remove="Forms\Images\TwoHearts.jpg" />
+    <None Remove="Forms\Images\TwoSpades.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Forms\Images\AceClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\AceDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\AceHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\AceSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\EightClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\EightDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\EightHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\EightSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FiveClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FiveDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FiveHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FiveSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FourClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FourDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FourHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\FourSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\JackClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\JackDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\JackHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\JackSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\KingClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\KingDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\KingHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\KingSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\NineClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\NineDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\NineHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\NineSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\QueenClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\QueenDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\QueenHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\QueenSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SevenClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SevenDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SevenHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SevenSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SixClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SixDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SixHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\SixSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TenClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TenDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TenHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TenSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\ThreeClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\ThreeDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\ThreeHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\ThreeSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TwoClubs.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TwoDiamonds.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TwoHearts.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\TwoSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
