@@ -34,7 +34,7 @@ public class Deck
         }
     }
 
-    public Card DealOne()
+    public Card DealOne() // Draw a card from the draw pile
     {
         if (drawPile.Count == 0)
         {
@@ -45,18 +45,20 @@ public class Deck
         return card;
     }
 
-    public bool IsEmpty()
-    {
-        return drawPile.Count == 0;
-    }
-
     public void Discard(Card card)
     {
         discardPile.Add(card);
     }
 
-    // Optionally, you might want to add a method to get the top card of the discard pile
-    // This could be useful for displaying it in the UI or allowing players to pick it up if your game rules allow
+    public Card PeekTopCardOfDrawPile()
+    {
+        if (drawPile.Count == 0)
+        {
+            throw new InvalidOperationException("No cards left in the draw pile.");
+        }
+        return drawPile[drawPile.Count - 1];
+    }
+
     public Card GetTopCardOfDiscardPile()
     {
         if (discardPile.Count > 0)
@@ -69,15 +71,8 @@ public class Deck
         }
     }
 
-    // public Card PeekTopCardOfDrawPile()
-    // {
-    //     if (drawPile.Count == 0)
-    //     {
-    //         throw new InvalidOperationException("No cards left in the draw pile.");
-    //     }
-    //     return drawPile[drawPile.Count - 1];
-    // }
-
-    // You may also want to add methods to manage moving cards from the discard pile back to the draw pile
-    // For example, if the draw pile runs out
+    public bool IsEmpty()
+    {
+        return drawPile.Count == 0;
+    }
 }

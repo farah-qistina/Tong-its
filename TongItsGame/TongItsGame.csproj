@@ -13,6 +13,7 @@
     <None Remove="Forms\Images\AceDiamonds.jpg" />
     <None Remove="Forms\Images\AceHearts.jpg" />
     <None Remove="Forms\Images\AceSpades.jpg" />
+    <None Remove="Forms\Images\cardback.jpg" />
     <None Remove="Forms\Images\EightClubs.jpg" />
     <None Remove="Forms\Images\EightDiamonds.jpg" />
     <None Remove="Forms\Images\EightHearts.jpg" />
@@ -74,6 +75,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Forms\Images\AceSpades.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Forms\Images\cardback.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Forms\Images\EightClubs.jpg">

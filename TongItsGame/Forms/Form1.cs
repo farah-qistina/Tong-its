@@ -5,10 +5,7 @@ using System.IO;
 
 public partial class MainForm : Form
 {
-    private Button buttonShuffle;
-    private Button buttonDeal;
     private Label cardDisplay;
-    private Panel panelCards;
 
     // Create an instance of your Game class
     private Game game;
@@ -19,12 +16,15 @@ public partial class MainForm : Form
         this.Size = new Size(800, 600); // Set the form size
         this.StartPosition = FormStartPosition.CenterScreen; // Center form on screen
         game = new Game();
-        game.OnHandChanged += Game_OnHandChanged;
-        game.DisplayHands();
-        // UpdateDrawPileDisplay();
-        makeMeldBtn.Click += drawCardButton_Click;
+        game.OnHandChanged += Game_OnHandChanged; // Subscribe
+        game.UpdateDrawPile += UpdateDrawPileDisplay;
+        game.StartGame();
+        pictureBox1.Click += pictureBoxDiscardPile_Click;
+        pictureBox2.Click += pictureBoxDrawPile_Click;
 
     }
+
+    // Hand
 
     private void Game_OnHandChanged(int playerIndex)
     {
@@ -58,7 +58,7 @@ public partial class MainForm : Form
         int cardWidth = 71;
         int cardHeight = 96;
         int xOffset = panel.Width - cardWidth;
-        int overlap = 42; // The amount each card will overlap the previous one
+        int overlap = 45; // The amount each card will overlap the previous one
 
         foreach (Card card in hand.GetAllCards())
         {
@@ -69,57 +69,111 @@ public partial class MainForm : Form
                 Height = cardHeight,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Image = Image.FromFile(imagePath), // Assuming image exists
-                Location = new Point(xOffset, 0) // Set the location with an offset
+                Location = new Point(xOffset, 0), // Set the location with an offset
+                Tag = card // Tag the PictureBox with its corresponding Card object
             };
+            cardPictureBox.Click += CardPictureBox_Click;
             panel.Controls.Add(cardPictureBox);
 
             xOffset -= (cardWidth - overlap); // Move the offset for the next card
         }
     }
 
+    // Piles
 
-    private void drawCardButton_Click(object sender, EventArgs e)
+    private Card selectedCard = null;
+    private PictureBox selectedPictureBox = null;
+
+    private void CardPictureBox_Click(object sender, EventArgs e)
     {
-        // Call the DrawCard() method and display the result
-        // string card = game.DrawCard();
-        // Assuming you have a Label or TextBox named cardDisplay
-        string imagePath = "Forms/Images/AceClubs.jpg";
-
-        // Create a new PictureBox
-        PictureBox cardPictureBox = new PictureBox
+        var pictureBox = sender as PictureBox;
+        if (pictureBox != null && pictureBox.Tag is Card)
         {
-            Width = 100, // Set the width (adjust as needed)
-            Height = 140, // Set the height (adjust as needed)
-            Location = new Point(10, 10), // Set the initial location on the form (adjust as needed)
-            SizeMode = PictureBoxSizeMode.StretchImage, // Set the size mode to stretch the image to fit the PictureBox
-            BorderStyle = BorderStyle.Fixed3D // Optional: adds a border around the PictureBox
-        };
+            var clickedCard = (Card)pictureBox.Tag;
 
-        // Check if the image file exists before attempting to load it
-        if (File.Exists(imagePath))
+            // Toggle selection if the same card is clicked again
+            if (selectedPictureBox == pictureBox)
+            {
+                pictureBox.BorderStyle = BorderStyle.None;
+                selectedPictureBox = null;
+                selectedCard = null;
+            }
+            else
+            {
+                // Update previously selected PictureBox, if any
+                if (selectedPictureBox != null)
+                {
+                    selectedPictureBox.BorderStyle = BorderStyle.None;
+                }
+
+                selectedPictureBox = pictureBox;
+                selectedPictureBox.BorderStyle = BorderStyle.Fixed3D;
+                selectedCard = clickedCard;
+            }
+        }
+    }
+
+    private void pictureBoxDrawPile_Click(object sender, EventArgs e)
+    {
+        try
         {
-            // Load the image into the PictureBox
-            cardDisplay.Text = "Image present";
-            cardPictureBox.Image = Image.FromFile(imagePath);
+            // Draw a card for the current player
+            game.DrawCard();
+            
+            // Update the UI for all players' hands since the current player's hand has changed
+            game.DisplayHands();
+            
+            // Update the draw pile display to reflect the new state after drawing a card
+            UpdateDrawPileDisplay();
+        }
+        catch (InvalidOperationException ex)
+        {
+            // You can handle exceptions here, for example, if there are no cards left in the draw pile
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        catch (Exception ex)
+        {
+            // Generic exception handling, could log or display a message
+            MessageBox.Show("An unexpected error occurred.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void pictureBoxDiscardPile_Click(object sender, EventArgs e)
+    {
+        if (selectedCard != null && selectedPictureBox != null)
+        {
+            game.DiscardCard(selectedCard); // Discard the selected card
+
+            // Update the UI for all players and the discard pile
+            game.DisplayHands();
+            UpdateDiscardPileDisplay();
+
+            // Deselect the card
+            selectedPictureBox.BorderStyle = BorderStyle.None;
+            selectedPictureBox = null;
+            selectedCard = null;
+        }
+    }
+
+    private void UpdateDrawPileDisplay()
+    {
+        // Check if the draw pile is empty or not
+        if (!game.IsDrawPileEmpty()) // You might need to implement this method in your Game class
+        {
+            // If not empty, display a generic back of card image
+            pictureBox2.Image = Image.FromFile("Forms/Images/cardback.jpg");
         }
         else
         {
-            // Log or handle the case where the image file does not exist
-            cardDisplay.Text = "Not present";
-            // Optionally, you could set a default image or leave the PictureBox empty
+            // If empty, you might want to clear the PictureBox or display a specific "empty" image
+            pictureBox2.Image = null; // Or set to an "empty pile" image
         }
-
-        // Add the PictureBox to the form's controls
-        this.Controls.Add(cardPictureBox);
-
-        // Adjust the PictureBox location or other properties as needed
-        // For example, to add multiple PictureBoxes without overlap, you might increment the Location for each new card
     }
 
     private void UpdateDiscardPileDisplay()
     {
         // Assuming you have a PictureBox for the discard pile
-        var topDiscard = game.GetTopDiscard(); // Implement this method in Game
+        Card topDiscard = game.GetTopDiscard(); // Implement this method in Game
         if (topDiscard != null)
         {
             string imagePath = $"Forms/Images/{topDiscard.FaceValue}{topDiscard.Suit}.jpg";
@@ -127,41 +181,30 @@ public partial class MainForm : Form
         }
     }
 
-    // private void UpdateDrawPileDisplay()
-    // {
-    //     // Check if the draw pile is empty or not
-    //     if (!game.IsDrawPileEmpty()) // You might need to implement this method in your Game class
-    //     {
-    //         // If not empty, display a generic back of card image
-    //         string imagePath = "cardback.jpg"; // Replace with the path to your card back image
-    //         pictureBox2.Image = Image.FromFile(imagePath);
-    //     }
-    //     else
-    //     {
-    //         // If empty, you might want to clear the PictureBox or display a specific "empty" image
-    //         pictureBox2.Image = null; // Or set to an "empty pile" image
-    //     }
-    // }
+    // Next player
 
-    private void drawPilePictureBox_Click(object sender, EventArgs e)
+    private void UpdatePlayerLabelsStyle()
     {
-        // Handle drawing a card from the draw pile
-    }
+        // Assume currentPlayerIndex is accessible; if not, make it available from the Game class
+        int currentPlayerIndex = game.GetCurrentPlayerIndex(); // You might need to implement this method in your Game class
 
-    private void discardPilePictureBox_Click(object sender, EventArgs e)
-    {
-        // Handle picking up the discard pile, if your game rules allow it
-    }
+        // Reset all labels to regular font
+        label2.Font = new Font(label2.Font, FontStyle.Regular);
+        label1.Font = new Font(label1.Font, FontStyle.Regular);
+        label3.Font = new Font(label3.Font, FontStyle.Regular);
 
-    private void buttonShuffle_Click(object sender, EventArgs e)
-    {
-        // Add code to shuffle the deck
-        cardDisplay.Text = "Deck shuffled!";
-    }
-
-    private void buttonDeal_Click(object sender, EventArgs e)
-    {
-        // Add code to deal cards to the hands
-        cardDisplay.Text = "Cards dealt!";
+        // Set the current player's label to bold
+        switch (currentPlayerIndex)
+        {
+            case 0:
+                label2.Font = new Font(label2.Font, FontStyle.Bold);
+                break;
+            case 1:
+                label1.Font = new Font(label1.Font, FontStyle.Bold);
+                break;
+            case 2:
+                label3.Font = new Font(label3.Font, FontStyle.Bold);
+                break;
+        }
     }
 }

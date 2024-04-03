@@ -8,7 +8,7 @@ public class Card
         Suit = suit;
         FaceValue = faceValue;
     }
-
+    
     public override string ToString()
     {
         return $"{FaceValue} of {Suit}";

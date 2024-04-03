@@ -42,6 +42,4 @@ public class Hand
     {
         return cards.Contains(card);
     }
-
-    // Other hand-related methods like evaluating the hand can be added here
 }

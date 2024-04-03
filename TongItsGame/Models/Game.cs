@@ -9,9 +9,10 @@ public class Game
     private List<Hand> hands;
     private int numberOfPlayers= 3;
     private int currentPlayerIndex;
-    private bool emptyHand; // New boolean variable to track if any player's hand is empty
+    private bool emptyHand; // To track if any player's hand is empty
     private bool callDraw;
     public event Action<int> OnHandChanged;
+    public event Action UpdateDrawPile;
     
     
 
@@ -22,44 +23,14 @@ public class Game
 
         hands = new List<Hand>();
         
-
         Initialize(numberOfPlayers);
-
         
         currentPlayerIndex = 0; // Game starts with the first player
         emptyHand = false; // Initially, no player has an empty hand
         callDraw = false; //Initially, no player calls for a draw
-
-        // StartGame();
-
     }
 
-    public void DisplayHands()
-    {
-        for (int i = 0; i < numberOfPlayers; i++)
-        {
-            OnHandChanged?.Invoke(i);
-        }
-    }
-
-    public List<Hand> GetAllHands()
-    {
-        return new List<Hand>(hands); // Returns a new list containing all cards in the hand
-    }
-
-    public void PrintAllHands(List<Hand> hands1)
-    {
-        for (int i = 0; i < hands1.Count; i++)
-        {
-            Console.WriteLine($"Player {i + 1}'s hand:");
-            foreach (Card card in hands1[i].GetAllCards()) // Using GetAllCards() as defined in Hand.cs
-            {
-                string cardDescription = $"{card.FaceValue} of {card.Suit}";
-                Console.WriteLine(cardDescription);
-            }
-            Console.WriteLine(); // Add a newline for better readability
-        }
-    }
+    // Game
 
     public void Initialize(int numberOfPlayers) {
         for (int i = 0; i < numberOfPlayers; i++)
@@ -75,17 +46,19 @@ public class Game
 
     public void StartGame()
     {
-        while (!emptyHand && !callDraw && !deck.IsEmpty())
-        {
-            PlayTurn();
-        }
+        DisplayHands();
+        UpdateDrawPile?.Invoke();
+        // while (!emptyHand && !callDraw && !deck.IsEmpty())
+        // {
+        //     // PlayTurn();
+        // }
 
-        // After exiting the loop, check if callDraw is true
-        if (callDraw || deck.IsEmpty())
-        {
-            // Call the CalcScore method to determine the winner
-            int winnerIndex = CalcScore();
-        }
+        // // After exiting the loop, check if callDraw is true
+        // if (callDraw || deck.IsEmpty())
+        // {
+        //     // Call the CalcScore method to determine the winner
+        //     int winnerIndex = CalcScore();
+        // }
     }
 
     // Example method to manage a player's turn
@@ -127,54 +100,6 @@ public class Game
         currentPlayerIndex = (currentPlayerIndex + 1) % hands.Count;
     }
 
-    // Allows the current player to draw a card from the deck
-    // public Card DrawCard()
-    // {
-    //     if (deck.IsEmpty())
-    //     {
-    //         throw new InvalidOperationException("No more cards in the deck.");
-    //     }
-
-    //     Card drawnCard = deck.DealOne();
-    //     hands[currentPlayerIndex].AddCard(drawnCard);
-    //     return drawnCard;
-    // }
-
-    
-
-    public void DrawCard()
-    {
-        // Your logic to draw a card and return its value/name
-    }
-
-    // Allows the current player to discard a specific card
-    public void DiscardCard(Card card)
-    {
-        if (!hands[currentPlayerIndex].RemoveCard(card))
-        {
-            throw new ArgumentException("The card is not in the player's hand.");
-        }
-
-        // Optionally, add the card to a discard pile if your game needs one
-    }
-
-    public Card GetTopDiscard()
-    {
-        // Call the Deck's method to get the top card of the discard pile
-        return deck.GetTopCardOfDiscardPile();
-    }
-
-    // public Card GetTopDraw()
-    // {
-    //     // Use the newly created method in Deck to get the top card of the draw pile
-    //     return deck.PeekTopCardOfDrawPile();
-    // }
-
-    public bool IsDrawPileEmpty()
-    {
-        return deck.IsEmpty(); // Assuming IsEmpty() checks the draw pile in your Deck class
-    }
-
     public int CalcScore()
     {
         int winningPlayerIndex = -1;
@@ -213,7 +138,91 @@ public class Game
         return winningPlayerIndex;
     }
 
+
+    // UI
+
+    public void DisplayHands()
+    {
+        for (int i = 0; i < numberOfPlayers; i++)
+        {
+            OnHandChanged?.Invoke(i);
+        }
+    }
+
+    // Setters
+
+    // Allows the current player to draw a card from the deck
+    public Card DrawCard()
+    {
+        if (deck.IsEmpty())
+        {
+            throw new InvalidOperationException("No more cards in the deck.");
+        }
+
+        Card drawnCard = deck.DealOne();
+        hands[currentPlayerIndex].AddCard(drawnCard);
+        return drawnCard;
+    }
+
+    public void DiscardCard(Card card)
+    {
+        // Find the player who owns the selected card
+        int playerIndex = hands.FindIndex(hand => hand.ContainsCard(card));
+        if (playerIndex != -1)
+        {
+            if (hands[playerIndex].RemoveCard(card))
+            {
+                deck.Discard(card); // Adds the card to the discard pile
+                OnHandChanged?.Invoke(playerIndex); // Ensure UI updates for the specific player
+            }
+        }
+    }
+
+
+
+    // Getters
+
+    public int GetCurrentPlayerIndex()
+    {
+        return currentPlayerIndex; // Assuming this is the field tracking the current player
+    }
+
+    public List<Hand> GetAllHands()
+    {
+        return new List<Hand>(hands); // Returns a new list containing all cards in the hand
+    }
+
+    public Card GetTopDraw()
+    {
+        // Use the newly created method in Deck to get the top card of the draw pile
+        return deck.PeekTopCardOfDrawPile();
+    }
+
+    public Card GetTopDiscard()
+    {
+        // Call the Deck's method to get the top card of the discard pile
+        return deck.GetTopCardOfDiscardPile();
+    }
     
+    public bool IsDrawPileEmpty()
+    {
+        return deck.IsEmpty(); // Assuming IsEmpty() checks the draw pile in your Deck class
+    }
+
+    // public void PrintAllHands(List<Hand> hands1) // Used for debugging
+    // {
+    //     for (int i = 0; i < hands1.Count; i++)
+    //     {
+    //         Console.WriteLine($"Player {i + 1}'s hand:");
+    //         foreach (Card card in hands1[i].GetAllCards()) // Using GetAllCards() as defined in Hand.cs
+    //         {
+    //             string cardDescription = $"{card.FaceValue} of {card.Suit}";
+    //             Console.WriteLine(cardDescription);
+    //         }
+    //         Console.WriteLine();
+    //     }
+    // }
+
 
     // Additional methods as needed for game logic, checking for win conditions, etc.
 }
