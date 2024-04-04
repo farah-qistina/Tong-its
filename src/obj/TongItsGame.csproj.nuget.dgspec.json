@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\TongItsGame\\TongItsGame.csproj": {}
+    "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\src\\TongItsGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\TongItsGame\\TongItsGame.csproj": {
+    "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\src\\TongItsGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\TongItsGame\\TongItsGame.csproj",
+        "projectUniqueName": "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\src\\TongItsGame.csproj",
         "projectName": "TongItsGame",
-        "projectPath": "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\TongItsGame\\TongItsGame.csproj",
+        "projectPath": "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\src\\TongItsGame.csproj",
         "packagesPath": "C:\\Users\\farah\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\TongItsGame\\obj\\",
+        "outputPath": "C:\\Users\\farah\\OneDrive - University of Nottingham Malaysia\\Codes\\uvocorp\\1 Tong-Its C#\\C# Tong-its\\src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\farah\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -14,6 +14,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = TongItsGame
-build_property.ProjectDir = C:\Users\farah\OneDrive - University of Nottingham Malaysia\Codes\uvocorp\1 Tong-Its C#\C# Tong-its\TongItsGame\
+build_property.ProjectDir = C:\Users\farah\OneDrive - University of Nottingham Malaysia\Codes\uvocorp\1 Tong-Its C#\C# Tong-its\src\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
