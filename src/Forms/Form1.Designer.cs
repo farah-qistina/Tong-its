@@ -167,7 +167,7 @@
         // 
         label6.Anchor = AnchorStyles.Top;
         label6.AutoSize = true;
-        label6.Location = new Point(38, 323);
+        label6.Location = new Point(38, 338);
         label6.Name = "label6";
         label6.Size = new Size(79, 32);
         label6.TabIndex = 18;
@@ -177,7 +177,7 @@
         // 
         label7.Anchor = AnchorStyles.Top;
         label7.AutoSize = true;
-        label7.Location = new Point(858, 319);
+        label7.Location = new Point(857, 338);
         label7.Name = "label7";
         label7.Size = new Size(79, 32);
         label7.TabIndex = 19;
