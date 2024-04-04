@@ -7,12 +7,14 @@ public class Game
 {
     private Deck deck;
     private List<Hand> hands;
-    private int numberOfPlayers= 3;
+    private int numberOfPlayers = 3;
     private int currentPlayerIndex;
     private bool emptyHand; // To track if any player's hand is empty
     private bool callDraw;
+    private bool winnerPresent;
+    private bool goNext;
+
     public event Action<int> OnHandChanged;
-    public event Action UpdateDrawPile;
     
     
 
@@ -28,6 +30,8 @@ public class Game
         currentPlayerIndex = 0; // Game starts with the first player
         emptyHand = false; // Initially, no player has an empty hand
         callDraw = false; //Initially, no player calls for a draw
+        winnerPresent = false; // Default to false, meaning no winner initially
+        goNext = false; // Default to false, player 1's turn before 2
     }
 
     // Game
@@ -36,7 +40,7 @@ public class Game
         for (int i = 0; i < numberOfPlayers; i++)
         {
             Hand hand = new Hand();
-            for (int j = 0; j < 12; j++) // Assuming 12 cards are dealt to each player initially in Tong-Its
+            for (int j = 0; j < 12; j++) // 12 cards are dealt to each player initially in Tong-Its
             {
                 hand.AddCard(deck.DealOne());
             }
@@ -44,61 +48,6 @@ public class Game
         }
     }
 
-    public void StartGame()
-    {
-        DisplayHands();
-        UpdateDrawPile?.Invoke();
-        // while (!emptyHand && !callDraw && !deck.IsEmpty())
-        // {
-        //     // PlayTurn();
-        // }
-
-        // // After exiting the loop, check if callDraw is true
-        // if (callDraw || deck.IsEmpty())
-        // {
-        //     // Call the CalcScore method to determine the winner
-        //     int winnerIndex = CalcScore();
-        // }
-    }
-
-    // Example method to manage a player's turn
-    // This method would be called in your game loop to handle each turn
-    public void PlayTurn()
-    {
-        // Example flow of a turn:
-        // 1. Player draws a card
-        DrawCard();
-
-        OnHandChanged?.Invoke(currentPlayerIndex);
-
-        // 2. Player plays their hand (not implemented here, depends on your game's rules)
-
-        // 3. Player discards a card (you might want to allow the player to choose which card to discard)
-        if (hands[currentPlayerIndex].CardCount() > 0)
-        {
-            Card cardToDiscard = hands[currentPlayerIndex].GetCard(0); //Discards 1st card for now
-            DiscardCard(cardToDiscard);
-        }
-
-        
-
-        // Check if the current player has any cards left in his hand
-        if (hands[currentPlayerIndex].CardCount() == 0)
-        {
-            emptyHand = true; // Set emptyHand to true if the current player's hand is empty
-        }
-
-        //Check if player wants to call draw
-
-        // Move to the next player's turn
-        NextPlayer();
-    }
-
-    // Advances to the next player
-    public void NextPlayer()
-    {
-        currentPlayerIndex = (currentPlayerIndex + 1) % hands.Count;
-    }
 
     public int CalcScore()
     {
@@ -108,7 +57,7 @@ public class Game
         for (int i = 0; i < hands.Count; i++)
         {
             int handScore = 0;
-            foreach (Card card in hands[i].GetAllCards()) // Assuming a method GetAllCards exists to return all cards in a hand
+            foreach (Card card in hands[i].GetAllCards()) 
             {
                 if (card.FaceValue >= FaceValue.Two && card.FaceValue <= FaceValue.Ten)
                 {
@@ -167,24 +116,45 @@ public class Game
     public void DiscardCard(Card card)
     {
         // Find the player who owns the selected card
-        int playerIndex = hands.FindIndex(hand => hand.ContainsCard(card));
+        int playerIndex = FindPlayer(card);
         if (playerIndex != -1)
         {
-            if (hands[playerIndex].RemoveCard(card))
+            if (RemoveCard(card))
             {
                 deck.Discard(card); // Adds the card to the discard pile
-                OnHandChanged?.Invoke(playerIndex); // Ensure UI updates for the specific player
             }
         }
     }
 
+    public bool RemoveCard(Card card)
+    {
+        // Find the player who owns the selected card
+        int playerIndex = FindPlayer(card);
+        if (playerIndex != -1)
+        {
+            return hands[playerIndex].RemoveCard(card);
+        } else {
+            return false;
+        }
+    }
 
+    public void SetCurrentPlayerIndex(int index)
+    {
+        if (index >= 0 && index < numberOfPlayers)
+        {
+            currentPlayerIndex = index;
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), "Index must be within the range of the number of players.");
+        }
+    }
 
     // Getters
 
     public int GetCurrentPlayerIndex()
     {
-        return currentPlayerIndex; // Assuming this is the field tracking the current player
+        return currentPlayerIndex;
     }
 
     public List<Hand> GetAllHands()
@@ -194,7 +164,7 @@ public class Game
 
     public Card GetTopDraw()
     {
-        // Use the newly created method in Deck to get the top card of the draw pile
+        // Use the method in Deck to get the top card of the draw pile
         return deck.PeekTopCardOfDrawPile();
     }
 
@@ -206,8 +176,24 @@ public class Game
     
     public bool IsDrawPileEmpty()
     {
-        return deck.IsEmpty(); // Assuming IsEmpty() checks the draw pile in your Deck class
+        return deck.IsEmpty();
     }
+
+    public bool IsCurrentPlayerHandEmpty()
+    {
+        return hands[currentPlayerIndex].CardCount() == 0;
+    }
+
+    public int GetPlayers(int playerIndex)
+    {
+        return numberOfPlayers;
+    }
+
+    public int FindPlayer(Card card)
+    {
+        return hands.FindIndex(hand => hand.ContainsCard(card));
+    }
+
 
     // public void PrintAllHands(List<Hand> hands1) // Used for debugging
     // {
@@ -222,7 +208,4 @@ public class Game
     //         Console.WriteLine();
     //     }
     // }
-
-
-    // Additional methods as needed for game logic, checking for win conditions, etc.
 }

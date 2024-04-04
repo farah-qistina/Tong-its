@@ -49,6 +49,7 @@ public class Deck
     {
         discardPile.Add(card);
     }
+    
 
     public Card PeekTopCardOfDrawPile()
     {
@@ -67,7 +68,7 @@ public class Deck
         }
         else
         {
-            return null; // Or throw an exception if you prefer
+            return null;
         }
     }
 
