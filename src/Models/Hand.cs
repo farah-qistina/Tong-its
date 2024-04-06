@@ -42,4 +42,9 @@ public class Hand
     {
         return cards.Contains(card);
     }
+
+    public void ClearHand()
+    {
+        cards.Clear();
+    }
 }

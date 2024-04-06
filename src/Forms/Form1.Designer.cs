@@ -25,9 +25,9 @@
         label1 = new Label();
         label2 = new Label();
         label3 = new Label();
-        panel1 = new Panel();
-        panel2 = new Panel();
-        panel3 = new Panel();
+        player1 = new Panel();
+        player2 = new Panel();
+        player3 = new Panel();
         pictureBox1 = new PictureBox();
         label4 = new Label();
         pictureBox2 = new PictureBox();
@@ -37,18 +37,18 @@
         label8 = new Label();
         panel4 = new Panel();
         label9 = new Label();
-        panel6 = new Panel();
-        panel5 = new Panel();
-        panel9 = new Panel();
-        panel11 = new Panel();
-        panel12 = new Panel();
-        panel14 = new Panel();
-        panel7 = new Panel();
-        panel15 = new Panel();
-        panel8 = new Panel();
-        panel10 = new Panel();
-        panel13 = new Panel();
-        panel16 = new Panel();
+        player2meld4 = new Panel();
+        player2meld3 = new Panel();
+        player1meld4 = new Panel();
+        player3meld3 = new Panel();
+        player3meld2 = new Panel();
+        player2meld1 = new Panel();
+        player2meld2 = new Panel();
+        player1meld3 = new Panel();
+        player1meld1 = new Panel();
+        player1meld2 = new Panel();
+        player3meld4 = new Panel();
+        player3meld1 = new Panel();
         ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
         ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
         panel4.SuspendLayout();
@@ -68,9 +68,9 @@
         // callDrawBtn
         // 
         callDrawBtn.Anchor = AnchorStyles.Top;
-        callDrawBtn.Location = new Point(799, 43);
+        callDrawBtn.Location = new Point(756, 43);
         callDrawBtn.Name = "callDrawBtn";
-        callDrawBtn.Size = new Size(145, 35);
+        callDrawBtn.Size = new Size(180, 35);
         callDrawBtn.TabIndex = 6;
         callDrawBtn.Text = "Call Draw";
         callDrawBtn.UseVisualStyleBackColor = true;
@@ -79,20 +79,22 @@
         // 
         label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         label1.AutoSize = true;
-        label1.Location = new Point(685, 734);
+        label1.Location = new Point(680, 722);
         label1.Name = "label1";
         label1.Size = new Size(98, 32);
         label1.TabIndex = 8;
         label1.Text = "Player 2";
+        label1.Click += label1_Click;
         // 
         // label2
         // 
         label2.AutoSize = true;
-        label2.Location = new Point(177, 736);
+        label2.Location = new Point(184, 722);
         label2.Name = "label2";
         label2.Size = new Size(98, 32);
         label2.TabIndex = 9;
         label2.Text = "Player 1";
+        label2.Click += label2_Click;
         // 
         // label3
         // 
@@ -105,26 +107,29 @@
         label3.Text = "Player 3";
         label3.TextAlign = ContentAlignment.MiddleCenter;
         // 
-        // panel1
+        // player1
         // 
-        panel1.Location = new Point(38, 613);
-        panel1.Name = "panel1";
-        panel1.Size = new Size(400, 120);
-        panel1.TabIndex = 11;
+        player1.BorderStyle = BorderStyle.Fixed3D;
+        player1.Location = new Point(38, 613);
+        player1.Name = "player1";
+        player1.Size = new Size(400, 96);
+        player1.TabIndex = 11;
         // 
-        // panel2
+        // player2
         // 
-        panel2.Location = new Point(536, 611);
-        panel2.Name = "panel2";
-        panel2.Size = new Size(400, 120);
-        panel2.TabIndex = 12;
+        player2.BorderStyle = BorderStyle.Fixed3D;
+        player2.Location = new Point(536, 611);
+        player2.Name = "player2";
+        player2.Size = new Size(400, 96);
+        player2.TabIndex = 12;
         // 
-        // panel3
+        // player3
         // 
-        panel3.Location = new Point(288, 14);
-        panel3.Name = "panel3";
-        panel3.Size = new Size(393, 120);
-        panel3.TabIndex = 13;
+        player3.BorderStyle = BorderStyle.Fixed3D;
+        player3.Location = new Point(288, 14);
+        player3.Name = "player3";
+        player3.Size = new Size(393, 96);
+        player3.TabIndex = 13;
         // 
         // pictureBox1
         // 
@@ -218,119 +223,119 @@
         label9.Text = "The winner is Player1!";
         label9.TextAlign = ContentAlignment.MiddleCenter;
         // 
-        // panel6
+        // player2meld4
         // 
-        panel6.BorderStyle = BorderStyle.FixedSingle;
-        panel6.Location = new Point(816, 373);
-        panel6.Name = "panel6";
-        panel6.Size = new Size(119, 96);
-        panel6.TabIndex = 14;
+        player2meld4.BorderStyle = BorderStyle.FixedSingle;
+        player2meld4.Location = new Point(816, 373);
+        player2meld4.Name = "player2meld4";
+        player2meld4.Size = new Size(119, 96);
+        player2meld4.TabIndex = 14;
         // 
-        // panel5
+        // player2meld3
         // 
-        panel5.BorderStyle = BorderStyle.FixedSingle;
-        panel5.Location = new Point(691, 373);
-        panel5.Name = "panel5";
-        panel5.Size = new Size(119, 96);
-        panel5.TabIndex = 15;
+        player2meld3.BorderStyle = BorderStyle.FixedSingle;
+        player2meld3.Location = new Point(691, 373);
+        player2meld3.Name = "player2meld3";
+        player2meld3.Size = new Size(119, 96);
+        player2meld3.TabIndex = 15;
         // 
-        // panel9
+        // player1meld4
         // 
-        panel9.BorderStyle = BorderStyle.FixedSingle;
-        panel9.Location = new Point(163, 373);
-        panel9.Name = "panel9";
-        panel9.Size = new Size(119, 96);
-        panel9.TabIndex = 24;
+        player1meld4.BorderStyle = BorderStyle.FixedSingle;
+        player1meld4.Location = new Point(163, 373);
+        player1meld4.Name = "player1meld4";
+        player1meld4.Size = new Size(119, 96);
+        player1meld4.TabIndex = 24;
         // 
-        // panel11
+        // player3meld3
         // 
-        panel11.BorderStyle = BorderStyle.FixedSingle;
-        panel11.Location = new Point(489, 172);
-        panel11.Name = "panel11";
-        panel11.Size = new Size(119, 96);
-        panel11.TabIndex = 28;
+        player3meld3.BorderStyle = BorderStyle.FixedSingle;
+        player3meld3.Location = new Point(489, 172);
+        player3meld3.Name = "player3meld3";
+        player3meld3.Size = new Size(119, 96);
+        player3meld3.TabIndex = 28;
         // 
-        // panel12
+        // player3meld2
         // 
-        panel12.BorderStyle = BorderStyle.FixedSingle;
-        panel12.Location = new Point(364, 172);
-        panel12.Name = "panel12";
-        panel12.Size = new Size(119, 96);
-        panel12.TabIndex = 27;
+        player3meld2.BorderStyle = BorderStyle.FixedSingle;
+        player3meld2.Location = new Point(364, 172);
+        player3meld2.Name = "player3meld2";
+        player3meld2.Size = new Size(119, 96);
+        player3meld2.TabIndex = 27;
         // 
-        // panel14
+        // player2meld1
         // 
-        panel14.BorderStyle = BorderStyle.FixedSingle;
-        panel14.Location = new Point(534, 488);
-        panel14.Name = "panel14";
-        panel14.Size = new Size(196, 96);
-        panel14.TabIndex = 17;
+        player2meld1.BorderStyle = BorderStyle.FixedSingle;
+        player2meld1.Location = new Point(534, 488);
+        player2meld1.Name = "player2meld1";
+        player2meld1.Size = new Size(196, 96);
+        player2meld1.TabIndex = 17;
         // 
-        // panel7
+        // player2meld2
         // 
-        panel7.BorderStyle = BorderStyle.FixedSingle;
-        panel7.Location = new Point(739, 488);
-        panel7.Name = "panel7";
-        panel7.Size = new Size(196, 96);
-        panel7.TabIndex = 18;
+        player2meld2.BorderStyle = BorderStyle.FixedSingle;
+        player2meld2.Location = new Point(739, 488);
+        player2meld2.Name = "player2meld2";
+        player2meld2.Size = new Size(196, 96);
+        player2meld2.TabIndex = 18;
         // 
-        // panel15
+        // player1meld3
         // 
-        panel15.BorderStyle = BorderStyle.FixedSingle;
-        panel15.Location = new Point(38, 373);
-        panel15.Name = "panel15";
-        panel15.Size = new Size(119, 96);
-        panel15.TabIndex = 24;
+        player1meld3.BorderStyle = BorderStyle.FixedSingle;
+        player1meld3.Location = new Point(38, 373);
+        player1meld3.Name = "player1meld3";
+        player1meld3.Size = new Size(119, 96);
+        player1meld3.TabIndex = 24;
         // 
-        // panel8
+        // player1meld1
         // 
-        panel8.BorderStyle = BorderStyle.FixedSingle;
-        panel8.Location = new Point(38, 488);
-        panel8.Name = "panel8";
-        panel8.Size = new Size(196, 96);
-        panel8.TabIndex = 18;
+        player1meld1.BorderStyle = BorderStyle.FixedSingle;
+        player1meld1.Location = new Point(38, 488);
+        player1meld1.Name = "player1meld1";
+        player1meld1.Size = new Size(196, 96);
+        player1meld1.TabIndex = 18;
         // 
-        // panel10
+        // player1meld2
         // 
-        panel10.BorderStyle = BorderStyle.FixedSingle;
-        panel10.Location = new Point(242, 488);
-        panel10.Name = "panel10";
-        panel10.Size = new Size(196, 96);
-        panel10.TabIndex = 19;
+        player1meld2.BorderStyle = BorderStyle.FixedSingle;
+        player1meld2.Location = new Point(242, 488);
+        player1meld2.Name = "player1meld2";
+        player1meld2.Size = new Size(196, 96);
+        player1meld2.TabIndex = 19;
         // 
-        // panel13
+        // player3meld4
         // 
-        panel13.BorderStyle = BorderStyle.FixedSingle;
-        panel13.Location = new Point(614, 172);
-        panel13.Name = "panel13";
-        panel13.Size = new Size(196, 96);
-        panel13.TabIndex = 29;
+        player3meld4.BorderStyle = BorderStyle.FixedSingle;
+        player3meld4.Location = new Point(614, 172);
+        player3meld4.Name = "player3meld4";
+        player3meld4.Size = new Size(196, 96);
+        player3meld4.TabIndex = 29;
         // 
-        // panel16
+        // player3meld1
         // 
-        panel16.BorderStyle = BorderStyle.FixedSingle;
-        panel16.Location = new Point(163, 172);
-        panel16.Name = "panel16";
-        panel16.Size = new Size(196, 96);
-        panel16.TabIndex = 30;
+        player3meld1.BorderStyle = BorderStyle.FixedSingle;
+        player3meld1.Location = new Point(163, 172);
+        player3meld1.Name = "player3meld1";
+        player3meld1.Size = new Size(196, 96);
+        player3meld1.TabIndex = 30;
         // 
         // MainForm
         // 
         BackColor = SystemColors.GradientInactiveCaption;
         ClientSize = new Size(974, 754);
-        Controls.Add(panel16);
-        Controls.Add(panel13);
-        Controls.Add(panel10);
-        Controls.Add(panel8);
-        Controls.Add(panel15);
-        Controls.Add(panel7);
-        Controls.Add(panel14);
+        Controls.Add(player3meld1);
+        Controls.Add(player3meld4);
+        Controls.Add(player1meld2);
+        Controls.Add(player1meld1);
+        Controls.Add(player1meld3);
+        Controls.Add(player2meld2);
+        Controls.Add(player2meld1);
         Controls.Add(panel4);
-        Controls.Add(panel11);
-        Controls.Add(panel12);
-        Controls.Add(panel9);
-        Controls.Add(panel5);
-        Controls.Add(panel6);
+        Controls.Add(player3meld3);
+        Controls.Add(player3meld2);
+        Controls.Add(player1meld4);
+        Controls.Add(player2meld3);
+        Controls.Add(player2meld4);
         Controls.Add(label8);
         Controls.Add(label7);
         Controls.Add(label6);
@@ -338,9 +343,9 @@
         Controls.Add(pictureBox2);
         Controls.Add(label4);
         Controls.Add(pictureBox1);
-        Controls.Add(panel3);
-        Controls.Add(panel2);
-        Controls.Add(panel1);
+        Controls.Add(player3);
+        Controls.Add(player2);
+        Controls.Add(player1);
         Controls.Add(label3);
         Controls.Add(label2);
         Controls.Add(label1);
@@ -361,9 +366,9 @@
     private Label label1;
     private Label label2;
     private Label label3;
-    private Panel panel1;
-    private Panel panel2;
-    private Panel panel3;
+    private Panel player1;
+    private Panel player2;
+    private Panel player3;
     private PictureBox pictureBox1;
     private Label label4;
     private PictureBox pictureBox2;
@@ -373,16 +378,16 @@
     private Label label8;
     private Panel panel4;
     private Label label9;
-    private Panel panel6;
-    private Panel panel5;
-    private Panel panel9;
-    private Panel panel11;
-    private Panel panel12;
-    private Panel panel14;
-    private Panel panel7;
-    private Panel panel15;
-    private Panel panel8;
-    private Panel panel10;
-    private Panel panel13;
-    private Panel panel16;
+    private Panel player2meld4;
+    private Panel player2meld3;
+    private Panel player1meld4;
+    private Panel player3meld3;
+    private Panel player3meld2;
+    private Panel player2meld1;
+    private Panel player2meld2;
+    private Panel player1meld3;
+    private Panel player1meld1;
+    private Panel player1meld2;
+    private Panel player3meld4;
+    private Panel player3meld1;
 }

@@ -4,9 +4,13 @@ using System.Windows.Forms;
 
 
 public class Game
+
+
+
 {
     private Deck deck;
     private List<Hand> hands;
+    private Hand meld; // Represents a current meld (Usage might vary)
     private int numberOfPlayers = 3;
     private int currentPlayerIndex;
     private bool emptyHand; // To track if any player's hand is empty
@@ -14,7 +18,7 @@ public class Game
     private bool winnerPresent;
     private bool goNext;
 
-    public event Action<int> OnHandChanged;
+    public event Action<int> PanelChanged;
     
     
 
@@ -44,6 +48,10 @@ public class Game
             {
                 hand.AddCard(deck.DealOne());
             }
+            hands.Add(hand);
+        }
+        for (int i = 3; i < 15; i++) { // Meld hands
+            Hand hand = new Hand();
             hands.Add(hand);
         }
     }
@@ -87,21 +95,76 @@ public class Game
         return winningPlayerIndex;
     }
 
+    // Meld logic
+
+    public bool TryCreateMeld(Hand potentialMeld, int meldIndex)
+    {
+        if (IsRun(potentialMeld) || IsSet(potentialMeld)) // Assuming GetAllCards() returns a List<Card>
+        {
+            if (meldIndex >= 3 && meldIndex < hands.Count)
+            {
+                var cardsToAdd = potentialMeld.GetAllCards();
+                foreach (var card in cardsToAdd)
+                {
+                    hands[meldIndex].AddCard(card);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool IsSet(Hand hand)
+    {
+        var cards = hand.GetAllCards();
+        if (cards.Count < 3) return false; // A set requires at least 3 cards
+
+        // Use LINQ to check if all cards have the same FaceValue
+        return cards.All(card => card.FaceValue == cards[0].FaceValue);
+    }
+
+
+    private bool IsRun(Hand hand)
+    {
+        var cards = hand.GetAllCards().OrderBy(card => card.Suit).ThenBy(card => card.FaceValue).ToList();
+        if (cards.Count < 3) return false; // A run requires at least 3 cards
+
+        // Check each suit separately for runs.
+        foreach (var suitGroup in cards.GroupBy(card => card.Suit))
+        {
+            var consecutiveCards = suitGroup.OrderBy(card => card.FaceValue).ToList();
+
+            for (int i = 0; i < consecutiveCards.Count - 2; i++) // -2 allows checking the next two cards without going out of bounds
+            {
+                // Check if the next two cards form a sequence with the current one.
+                if ((int)consecutiveCards[i + 1].FaceValue == (int)consecutiveCards[i].FaceValue + 1 &&
+                    (int)consecutiveCards[i + 2].FaceValue == (int)consecutiveCards[i].FaceValue + 2)
+                {
+                    return true; // Found a run of at least 3 cards.
+                }
+            }
+        }
+
+        return false; // No runs found.
+    }
+
+
 
     // UI
 
     public void DisplayHands()
     {
-        for (int i = 0; i < numberOfPlayers; i++)
+        // Panels
+        for (int i = 0; i < 15; i++)
         {
-            OnHandChanged?.Invoke(i);
+            PanelChanged?.Invoke(i);
         }
     }
 
     // Setters
 
     // Allows the current player to draw a card from the deck
-    public Card DrawCard()
+    public Card DrawCard(int index)
     {
         if (deck.IsEmpty())
         {
@@ -109,7 +172,7 @@ public class Game
         }
 
         Card drawnCard = deck.DealOne();
-        hands[currentPlayerIndex].AddCard(drawnCard);
+        hands[index].AddCard(drawnCard);
         return drawnCard;
     }
 
@@ -119,23 +182,31 @@ public class Game
         int playerIndex = FindPlayer(card);
         if (playerIndex != -1)
         {
-            if (RemoveCard(card))
+            if (RemoveCard(card, playerIndex))
             {
                 deck.Discard(card); // Adds the card to the discard pile
             }
         }
     }
 
-    public bool RemoveCard(Card card)
+    public bool RemoveCard(Card card, int index)
     {
         // Find the player who owns the selected card
-        int playerIndex = FindPlayer(card);
-        if (playerIndex != -1)
-        {
-            return hands[playerIndex].RemoveCard(card);
+        if (index < numberOfPlayers) {
+            int playerIndex = FindPlayer(card);
+            if (playerIndex != -1)
+            {
+                return hands[index].RemoveCard(card);
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            return hands[index].RemoveCard(card);
         }
+    }
+
+    public void AddCardToHand(Card card, int index) {
+        hands[index].AddCard(card);
     }
 
     public void SetCurrentPlayerIndex(int index)
@@ -184,7 +255,7 @@ public class Game
         return hands[currentPlayerIndex].CardCount() == 0;
     }
 
-    public int GetPlayers(int playerIndex)
+    public int GetPlayers()
     {
         return numberOfPlayers;
     }

@@ -18,45 +18,90 @@ public partial class MainForm : Form
         this.Size = new Size(800, 600); // Set the form size
         this.StartPosition = FormStartPosition.CenterScreen; // Center form on screen
         game = new Game();
-        game.OnHandChanged += Game_OnHandChanged; // Subscribe
-        UpdateDrawPileDisplay();
-        UpdatePlayerLabelsStyle();
-        game.DisplayHands();
-        pictureBox1.Click += pictureBoxDiscardPile_Click;
-        pictureBox2.Click += pictureBoxDrawPile_Click;
-        callDrawBtn.Click += callDrawBtn_Click;
-        Panel[] panels = { panel5,panel6, panel7, panel8, panel9, panel10, panel11, panel12, panel13, panel14, panel15, panel16 };
+        Panel[] panels = { player1, player2, player3, player1meld1, player1meld2, player1meld3, player1meld4, player2meld1, player2meld2, player2meld3, player2meld4, player3meld1, player3meld2, player3meld3, player3meld4 };
 
         // Subscribe to the click event for each panel using a loop
         foreach (Panel panel in panels)
         {
             panel.Click += Panel_Click;
         }
-
+        game.PanelChanged += Game_PanelChanged; // Subscribe
+        UpdateDrawPileDisplay();
+        UpdatePlayerLabelsStyle();
+        game.DisplayHands();
+        pictureBox1.Click += pictureBoxDiscardPile_Click;
+        pictureBox2.Click += pictureBoxDrawPile_Click;
+        callDrawBtn.Click += callDrawBtn_Click;
     }
 
-    // Hand
-
-    private void Game_OnHandChanged(int playerIndex)
+    protected override void OnLoad(EventArgs e)
     {
-        // Call the method to update the UI based on which player's hand changed
-        DisplayPlayerHandInLayout(playerIndex);
+        base.OnLoad(e);
+
+        // This line attempts to set the focus away from any button/control to the form itself.
+        // It's a workaround and might not work in all scenarios as expected because Windows Forms
+        // generally expects a control to have focus.
+        this.ActiveControl = null; // Attempt to remove focus from all controls
     }
 
-    private void DisplayPlayerHandInLayout(int index)
+    // Hands and melds
+
+    private void Game_PanelChanged(int panelIndex)
+    {
+        // Call the method to update the UI based on which panel hand changed
+        DisplayPanels(panelIndex);
+    }
+
+    private void DisplayPanels(int index)
     {
         Panel panel;
 
         switch (index)
         {
             case 0:
-                panel = panel1;
+                panel = player1;
                 break;
             case 1:
-                panel = panel2;
+                panel = player2;
                 break;
             case 2:
-                panel = panel3;
+                panel = player3;
+                break;
+            case 3:
+                panel = player1meld1;
+                break;
+            case 4:
+                panel = player1meld2;
+                break;
+            case 5:
+                panel = player1meld3;
+                break;
+            case 6:
+                panel = player1meld4;
+                break;
+            case 7:
+                panel = player2meld1;
+                break;
+            case 8:
+                panel = player2meld2;
+                break;
+            case 9:
+                panel = player2meld3;
+                break;
+            case 10:
+                panel = player2meld4;
+                break;
+            case 11:
+                panel = player3meld1;
+                break;
+            case 12:
+                panel = player3meld2;
+                break;
+            case 13:
+                panel = player3meld3;
+                break;
+            case 14:
+                panel = player3meld4;
                 break;
             default:
                 throw new ArgumentException("Invalid panel index", nameof(index));
@@ -66,13 +111,14 @@ public partial class MainForm : Form
         List<Hand> hands = game.GetAllHands();
         Hand hand = hands[index];
 
-        if ((hand.GetAllCards().Count) == 0) {
+        if ((hand.GetAllCards().Count) == 0)
+        {
             return;
         }
 
         int cardWidth = 71;
         int cardHeight = 96;
-        int panelWidth = panel.Width - 100;
+        int panelWidth = panel.Width - 80;
 
         // Calculate overlap based on the number of cards and the panel width
         int totalCardWidth = (hand.GetAllCards().Count) * cardWidth;
@@ -99,50 +145,79 @@ public partial class MainForm : Form
         }
     }
 
+    // Cards
 
     private Card selectedCard = null;
     private PictureBox selectedPictureBox = null;
+    private List<Card> selectedCards = new List<Card>();
+    private List<PictureBox> selectedPictureBoxes = new List<PictureBox>();
+
 
     private void CardPictureBox_Click(object sender, EventArgs e)
     {
-        PictureBox clickedCardPictureBox = sender as PictureBox;
-        Card clickedCard = clickedCardPictureBox.Tag as Card;
-
-        // Get the current player index from the Game class
-        int currentPlayerIndex = game.GetCurrentPlayerIndex();
-
-        int cardPlayerIndex = game.FindPlayer(clickedCard);
-
-        if (currentPlayerIndex == cardPlayerIndex && clickedCardPictureBox != null && clickedCardPictureBox.Tag is Card)
+        PictureBox clickedPictureBox = sender as PictureBox;
+        if (clickedPictureBox != null && clickedPictureBox.Tag is Card clickedCard)
         {
-            clickedCard = (Card)clickedCardPictureBox.Tag;
+            // Get the current player index from the Game class
+            int currentPlayerIndex = game.GetCurrentPlayerIndex();
+            int panelIndex = game.FindPlayer(clickedCard);
 
-            // Toggle selection if the same card is clicked again
-            if (selectedPictureBox == clickedCardPictureBox)
+            if (panelIndex > -1 && panelIndex < game.GetPlayers() && currentPlayerIndex != panelIndex)
             {
-                clickedCardPictureBox.BorderStyle = BorderStyle.None;
-                selectedPictureBox = null;
-                selectedCard = null;
+                // Ignore the selection or show a message, as the card does not belong to the current player
+                cardDisplay.Text = "Wait for your turn!";
+                return;
             }
-            else
+
+            // Handling selection based on selmul and previous selections
+            if (selectedPictureBox == null)
             {
-                // Update previously selected PictureBox, if any
+                // Deselect previous card if selmul is false
                 if (selectedPictureBox != null)
                 {
                     selectedPictureBox.BorderStyle = BorderStyle.None;
+                    selectedPictureBoxes.Remove(selectedPictureBox);
+                    selectedCards.Remove(selectedCard);
                 }
 
-                selectedPictureBox = clickedCardPictureBox;
-                selectedPictureBox.BorderStyle = BorderStyle.Fixed3D;
+                // Toggle selection if the same card is clicked again
+                if (selectedPictureBoxes.Contains(clickedPictureBox))
+                {
+                    clickedPictureBox.BorderStyle = BorderStyle.None;
+                    selectedPictureBoxes.Remove(clickedPictureBox);
+                    selectedCards.Remove(clickedCard);
+                }
+                else
+                {
+                    clickedPictureBox.BorderStyle = BorderStyle.Fixed3D;
+                    selectedPictureBoxes.Add(clickedPictureBox);
+                    selectedCards.Add(clickedCard);
+                }
+
+                // Update the reference to the last selected card and PictureBox
+                selectedPictureBox = clickedPictureBox;
                 selectedCard = clickedCard;
             }
-        }
-        else
-        {
-            // Ignore the selection or show a message, as the card does not belong to the current player
-            cardDisplay.Text = "Wait for yor turn!";
+            else // selmul is true, allow multiple selections
+            {
+                if (selectedPictureBoxes.Contains(clickedPictureBox))
+                {
+                    // If the card is already selected, deselect it
+                    clickedPictureBox.BorderStyle = BorderStyle.None;
+                    selectedPictureBoxes.Remove(clickedPictureBox);
+                    selectedCards.Remove(clickedCard);
+                }
+                else
+                {
+                    // Add the new card to selections
+                    clickedPictureBox.BorderStyle = BorderStyle.Fixed3D;
+                    selectedPictureBoxes.Add(clickedPictureBox);
+                    selectedCards.Add(clickedCard);
+                }
+            }
         }
     }
+
 
     // Piles
 
@@ -151,7 +226,7 @@ public partial class MainForm : Form
         try
         {
             // Draw a card for the current player
-            game.DrawCard();
+            game.DrawCard(game.GetCurrentPlayerIndex());
 
             // Update the UI for all players' hands since the current player's hand has changed
             game.DisplayHands();
@@ -164,9 +239,11 @@ public partial class MainForm : Form
                 cardDisplay.Text = "Deck is empty. Calculating winner...";
                 winner = game.CalcScore();
                 ShowWinner(winner);
-            } else {
+            }
+            else
+            {
                 int currentPlayer = game.GetCurrentPlayerIndex();
-                game.SetCurrentPlayerIndex((currentPlayer + 1) % game.GetPlayers(currentPlayer));
+                game.SetCurrentPlayerIndex((currentPlayer + 1) % game.GetPlayers());
                 UpdatePlayerLabelsStyle();
             }
         }
@@ -184,6 +261,10 @@ public partial class MainForm : Form
     {
         if (selectedCard != null && selectedPictureBox != null)
         {
+            if (selectedCards.Count > 1) {
+                cardDisplay.Text = "Please select only 1 card to discard.";
+                return;
+            }
             game.DiscardCard(selectedCard); // Discard the selected card
 
             bool emptyHand = game.IsCurrentPlayerHandEmpty();
@@ -198,14 +279,16 @@ public partial class MainForm : Form
                 cardDisplay.Text = "Tongit!";
                 winner = game.GetCurrentPlayerIndex();
                 ShowWinner(winner);
-            } else {
+            }
+            else
+            {
                 cardDisplay.Text = "Card discarded.";
             }
 
             // Deselect the card
             selectedPictureBox.BorderStyle = BorderStyle.None;
             selectedPictureBox = null;
-            selectedCard = null;     
+            selectedCard = null;
         }
     }
 
@@ -236,113 +319,103 @@ public partial class MainForm : Form
 
     // Melds
 
-    // To keep score of how many cards are in each meld
-    int panel5Count, panel6Count, panel7Count, panel8Count, panel9Count, panel10Count, panel11Count, panel12Count, panel13Count, panel14Count, panel15Count, panel16Count = 0;
+    private void Panel_Click(object sender, EventArgs e)
+    {
 
+        if (selectedCard != null && selectedPictureBox != null)
+        {
+            int index = -1;
 
-    private void Panel_Click(object sender, EventArgs e) {
-    if (selectedCard != null && selectedPictureBox != null)
+            Panel panel = (Panel)sender;
+
+            switch (panel.Name)
             {
-                game.RemoveCard(selectedCard); // Remove the selected card
+                case "player1":
+                    index = 0;
+                    break;
+                case "player2":
+                    index = 1;
+                    break;
+                case "player3":
+                    index = 2;
+                    break;
+                case "player1meld1":
+                    index = 3;
+                    break;
+                case "player1meld2":
+                    index = 4;
+                    break;
+                case "player1meld3":
+                    index = 5;
+                    break;
+                case "player1meld4":
+                    index = 6;
+                    break;
+                case "player2meld1":
+                    index = 7;
+                    break;
+                case "player2meld2":
+                    index = 8;
+                    break;
+                case "player2meld3":
+                    index = 9;
+                    break;
+                case "player2meld4":
+                    index = 10;
+                    break;
+                case "player3meld1":
+                    index = 11;
+                    break;
+                case "player3meld2":
+                    index = 12;
+                    break;
+                case "player3meld3":
+                    index = 13;
+                    break;
+                case "player3meld4":
+                    index = 14;
+                    break;
+            }
 
-                bool emptyHand = game.IsCurrentPlayerHandEmpty();
+            int originalHand = game.FindPlayer(selectedCard);
 
-                // Update the UI for all players and the discard pile
-                game.DisplayHands();
+            if (index > -1 && index < game.GetPlayers() && index != originalHand) {
+                cardDisplay.Text = "Not your hand to add to!";
+                return;
+            }
 
+            game.RemoveCard(selectedCard, originalHand); // Remove the selected card
+
+            game.AddCardToHand(selectedCard, index);
+
+            game.DisplayHands();
+
+            bool emptyHand = game.IsCurrentPlayerHandEmpty();
+
+            if (index > 2 && index < 15)
+            {
                 if (emptyHand)
                 {
                     // Perform actions based on the hand being empty
                     cardDisplay.Text = "Tongit!";
                     winner = game.GetCurrentPlayerIndex();
                     ShowWinner(winner);
-                } else {
+                }
+                else
+                {
                     cardDisplay.Text = "Card added to meld.";
                 }
-
-                Panel panel = (Panel)sender;
-                int cardWidth = 71;
-                int cardHeight = 96;
-                int panelWidth = panel.Width;
-                int currentCount = 0;
-                int xOffset;
-
-                // Use a switch case to increment panel counts
-                switch (panel.Name)
-                {
-                    case "panel5":
-                        panel5Count++;
-                        currentCount = panel5Count;
-                        break;
-                    case "panel6":
-                        panel6Count++;
-                        currentCount = panel6Count;
-                        break;
-                    case "panel7":
-                        panel7Count++;
-                        currentCount = panel7Count;
-                        break;
-                    case "panel8":
-                        panel8Count++;
-                        currentCount = panel8Count;
-                        break;
-                    case "panel9":
-                        panel9Count++;
-                        currentCount = panel9Count;
-                        break;
-                    case "panel10":
-                        panel10Count++;
-                        currentCount = panel10Count;
-                        break;
-                    case "panel11":
-                        panel11Count++;
-                        currentCount = panel11Count;
-                        break;
-                    case "panel12":
-                        panel12Count++;
-                        currentCount = panel12Count;
-                        break;
-                    case "panel13":
-                        panel13Count++;
-                        currentCount = panel13Count;
-                        break;
-                    case "panel14":
-                        panel13Count++;
-                        currentCount = panel14Count;
-                        break;
-                    case "panel15":
-                        panel13Count++;
-                        currentCount = panel15Count;
-                        break;
-                    case "panel16":
-                        panel13Count++;
-                        currentCount = panel16Count;
-                        break;
-                }
-
-                int overlap = 55;
-                xOffset = panel.Width - cardWidth;
-                if (currentCount > 1) {
-                    xOffset = (panel.Width - cardWidth - ((cardWidth - overlap) * (currentCount - 1)));
-                }
-
-                string imagePath = $"Forms/Images/{selectedCard.FaceValue}{selectedCard.Suit}.jpg";
-                PictureBox cardPictureBox = new PictureBox
-                {
-                    Width = cardWidth,
-                    Height = cardHeight,
-                    SizeMode = PictureBoxSizeMode.StretchImage,
-                    Image = Image.FromFile(imagePath),
-                    Location = new Point(xOffset, 0),
-                    Tag = selectedCard
-                };
-                panel.Controls.Add(cardPictureBox);
-                
-                // Deselect the card
-                selectedPictureBox.BorderStyle = BorderStyle.None;
-                selectedPictureBox = null;
-                selectedCard = null;
             }
+            else
+            {
+                cardDisplay.Text = "Card added back to hand.";
+            }
+
+            // Deselect the card
+            selectedPictureBox.BorderStyle = BorderStyle.None;
+            selectedPictureBox = null;
+            selectedCard = null;
+        }
     }
 
 
@@ -387,5 +460,15 @@ public partial class MainForm : Form
         label9.Text = $"The winner is Player {winner + 1}!";
         panel4.Visible = true;
         panel4.BringToFront(); // Ensure the panel is on top of other controls
+    }
+
+    private void label1_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void label2_Click(object sender, EventArgs e)
+    {
+
     }
 }
