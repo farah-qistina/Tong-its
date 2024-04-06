@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 public class Hand
 {
@@ -46,5 +47,20 @@ public class Hand
     public void ClearHand()
     {
         cards.Clear();
+    }
+
+    public void OrderCardsFromKingToAce()
+    {
+        cards = cards.OrderByDescending(card => card.FaceValue).ToList();
+    }
+
+    public Card GetHighestCard()
+    {
+        return cards.OrderByDescending(card => card.FaceValue).FirstOrDefault();
+    }
+
+    public Card GetLowestCard()
+    {
+        return cards.OrderBy(card => card.FaceValue).FirstOrDefault();
     }
 }

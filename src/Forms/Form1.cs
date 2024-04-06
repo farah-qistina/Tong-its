@@ -137,7 +137,9 @@ public partial class MainForm : Form
                 Location = new Point(xOffset, 0),
                 Tag = card
             };
-            cardPictureBox.Click += CardPictureBox_Click;
+            if (index > -1 && index < game.GetPlayers()) {
+                cardPictureBox.Click += CardPictureBox_Click;
+            }
             panel.Controls.Add(cardPictureBox);
 
             // Update xOffset for the next card
@@ -169,52 +171,20 @@ public partial class MainForm : Form
                 return;
             }
 
-            // Handling selection based on selmul and previous selections
-            if (selectedPictureBox == null)
-            {
-                // Deselect previous card if selmul is false
-                if (selectedPictureBox != null)
-                {
-                    selectedPictureBox.BorderStyle = BorderStyle.None;
-                    selectedPictureBoxes.Remove(selectedPictureBox);
-                    selectedCards.Remove(selectedCard);
-                }
-
-                // Toggle selection if the same card is clicked again
-                if (selectedPictureBoxes.Contains(clickedPictureBox))
-                {
-                    clickedPictureBox.BorderStyle = BorderStyle.None;
-                    selectedPictureBoxes.Remove(clickedPictureBox);
-                    selectedCards.Remove(clickedCard);
-                }
-                else
-                {
-                    clickedPictureBox.BorderStyle = BorderStyle.Fixed3D;
-                    selectedPictureBoxes.Add(clickedPictureBox);
-                    selectedCards.Add(clickedCard);
-                }
-
-                // Update the reference to the last selected card and PictureBox
+            if (selectedCards.Contains(clickedCard)) {
+                clickedPictureBox.BorderStyle = BorderStyle.None;
+                selectedPictureBoxes.Remove(clickedPictureBox);
+                selectedCards.Remove(clickedCard);
+                selectedPictureBox = null;
+                selectedCard = null;
+            } else if (!selectedCards.Contains(clickedCard)) {
+                clickedPictureBox.BorderStyle = BorderStyle.Fixed3D;
+                selectedPictureBoxes.Add(clickedPictureBox);
+                selectedCards.Add(clickedCard);
                 selectedPictureBox = clickedPictureBox;
                 selectedCard = clickedCard;
-            }
-            else // selmul is true, allow multiple selections
-            {
-                if (selectedPictureBoxes.Contains(clickedPictureBox))
-                {
-                    // If the card is already selected, deselect it
-                    clickedPictureBox.BorderStyle = BorderStyle.None;
-                    selectedPictureBoxes.Remove(clickedPictureBox);
-                    selectedCards.Remove(clickedCard);
-                }
-                else
-                {
-                    // Add the new card to selections
-                    clickedPictureBox.BorderStyle = BorderStyle.Fixed3D;
-                    selectedPictureBoxes.Add(clickedPictureBox);
-                    selectedCards.Add(clickedCard);
-                }
-            }
+            }           
+            
         }
     }
 
@@ -267,7 +237,7 @@ public partial class MainForm : Form
             }
             game.DiscardCard(selectedCard); // Discard the selected card
 
-            bool emptyHand = game.IsCurrentPlayerHandEmpty();
+            bool emptyHand = game.IsCurrentPlayerHandEmpty(game.GetCurrentPlayerIndex());
 
             // Update the UI for all players and the discard pile
             game.DisplayHands();
@@ -379,21 +349,49 @@ public partial class MainForm : Form
 
             int originalHand = game.FindPlayer(selectedCard);
 
-            if (index > -1 && index < game.GetPlayers() && index != originalHand) {
-                cardDisplay.Text = "Not your hand to add to!";
-                return;
-            }
+            if (index >= 3 && index <= 14) {
+                if (selectedCards.Count > 1)
+                {
+                    if (game.CanFormMeld(selectedCards))
+                    {
+                        // If the cards can form a meld, proceed to add them to the panel
+                        foreach (var card in selectedCards)
+                        {
+                            game.RemoveCard(card, game.FindPlayer(card)); // Assuming this method adjusts for removing a card from the original hand
+                            game.AddCardToHand(card, index);
+                        }
+                        game.orderCardsFromKingToAce(index);
 
-            game.RemoveCard(selectedCard, originalHand); // Remove the selected card
+                        cardDisplay.Text = "Meld added!";
+                    }
+                    else
+                    {
+                        cardDisplay.Text = "Not a meld.";
+                        // cardDisplay.Text = $"{selectedCards.Count}";
+                        return; // Exit the method to prevent adding the cards to the meld panel
+                    }
 
-            game.AddCardToHand(selectedCard, index);
+                    // Deselect the cards after moving them
+                    foreach (var pictureBox in selectedPictureBoxes)
+                    {
+                        pictureBox.BorderStyle = BorderStyle.None;
+                    }
+                    selectedPictureBoxes.Clear();
+                    selectedCards.Clear();
+                } else if (selectedCards.Count == 1 && !game.IsCurrentPlayerHandEmpty(index)) {
+                    if (game.FitsInMeld(selectedCard, index)) {
+                        game.RemoveCard(selectedCard, originalHand); // Remove the selected card
+                        game.AddCardToHand(selectedCard, index);
+                        cardDisplay.Text = "Added to meld.";
+                    }
+                } else {
+                    cardDisplay.Text = "Doesn't fit the meld.";
+                }
 
-            game.DisplayHands();
+                game.DisplayHands();
 
-            bool emptyHand = game.IsCurrentPlayerHandEmpty();
+                bool emptyHand = game.IsCurrentPlayerHandEmpty(game.GetCurrentPlayerIndex());
 
-            if (index > 2 && index < 15)
-            {
                 if (emptyHand)
                 {
                     // Perform actions based on the hand being empty
@@ -401,14 +399,6 @@ public partial class MainForm : Form
                     winner = game.GetCurrentPlayerIndex();
                     ShowWinner(winner);
                 }
-                else
-                {
-                    cardDisplay.Text = "Card added to meld.";
-                }
-            }
-            else
-            {
-                cardDisplay.Text = "Card added back to hand.";
             }
 
             // Deselect the card

@@ -10,7 +10,6 @@ public class Game
 {
     private Deck deck;
     private List<Hand> hands;
-    private Hand meld; // Represents a current meld (Usage might vary)
     private int numberOfPlayers = 3;
     private int currentPlayerIndex;
     private bool emptyHand; // To track if any player's hand is empty
@@ -97,21 +96,15 @@ public class Game
 
     // Meld logic
 
-    public bool TryCreateMeld(Hand potentialMeld, int meldIndex)
+    public bool CanFormMeld(List<Card> cards)
     {
-        if (IsRun(potentialMeld) || IsSet(potentialMeld)) // Assuming GetAllCards() returns a List<Card>
+        if (cards.Count < 3) return false;
+        Hand potentialMeld = new Hand();
+        foreach (var card in cards)
         {
-            if (meldIndex >= 3 && meldIndex < hands.Count)
-            {
-                var cardsToAdd = potentialMeld.GetAllCards();
-                foreach (var card in cardsToAdd)
-                {
-                    hands[meldIndex].AddCard(card);
-                }
-                return true;
-            }
+            potentialMeld.AddCard(card);
         }
-        return false;
+        return IsRun(potentialMeld) || IsSet(potentialMeld);
     }
 
     private bool IsSet(Hand hand)
@@ -146,6 +139,24 @@ public class Game
         }
 
         return false; // No runs found.
+    }
+
+    public bool FitsInMeld(Card newCard, int index)
+    {
+        // Check for Suit match (Set)
+        bool isSameSuit = hands[index].GetAllCards().All(card => card.Suit == newCard.Suit);
+        if (isSameSuit)
+        {
+            // If all cards in the meld are of the same suit, we need to check if the new card continues a sequence (Run)
+            var orderedMeldCards = hands[index].GetAllCards().OrderBy(card => card.FaceValue).ToList();
+            // Check if the new card fits at the start or end of a sequence
+            bool fitsInSequence = newCard.FaceValue + 1 == orderedMeldCards.First().FaceValue || newCard.FaceValue - 1 == orderedMeldCards.Last().FaceValue;
+            return fitsInSequence;
+        }
+
+        // Check for Face Value match (for Sets)
+        bool isSameValue = hands[index].GetAllCards().All(card => card.FaceValue == newCard.FaceValue);
+        return isSameValue;
     }
 
 
@@ -250,9 +261,9 @@ public class Game
         return deck.IsEmpty();
     }
 
-    public bool IsCurrentPlayerHandEmpty()
+    public bool IsCurrentPlayerHandEmpty(int index)
     {
-        return hands[currentPlayerIndex].CardCount() == 0;
+        return hands[index].CardCount() == 0;
     }
 
     public int GetPlayers()
@@ -265,6 +276,9 @@ public class Game
         return hands.FindIndex(hand => hand.ContainsCard(card));
     }
 
+    public void orderCardsFromKingToAce(int index) {
+        hands[index].OrderCardsFromKingToAce();
+    }
 
     // public void PrintAllHands(List<Hand> hands1) // Used for debugging
     // {
